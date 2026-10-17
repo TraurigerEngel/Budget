@@ -1,0 +1,29 @@
+BUDGET STANDALONE v0.2 STABLE — FINAL RELEASE SOURCE
+
+1. Быстрая DEV-проверка из PowerShell:
+   npm ci
+   npm run verify
+   npm run build:dev
+   .\src-tauri\target\debug\budget.exe
+
+2. Интерактивный DEV-запуск без отдельного EXE-командного шага:
+   npm run dev
+
+3. Собрать обновляемую portable DEV-копию:
+   .\BUILD-DEV.cmd
+
+   После === DEV BUILD READY === запустить:
+   .\Portable\Budget_Standalone_v0.2_Stable_DEV\Budget.exe
+
+4. Перед первым production-релизом установить Rust audit tool (один раз):
+   cargo install cargo-audit --locked
+
+5. Полный production/release pipeline:
+   .\MAKE-FINAL-RELEASE.cmd
+
+DEV = target\debug. RELEASE = target\release.
+Stable artifacts публикуются только после полной повторной проверки staged ZIP/EXE.
+Текущая эталонная budget.sqlite3 уже встроена в data + seed-data.
+MIGRATE-FROM-LOST-HEAVEN нужен только если позже появятся более свежие данные в старом Lost Heaven.
+
+CMD-обёртки не содержат pause и не ждут нажатия клавиши.

@@ -1,0 +1,193 @@
+/* Budget Preview 11 Hotfix 1 — isolated, cache-safe custom dropdown runtime.
+   Native selects remain canonical data/event sources; visible controls use the budget-dd namespace. */
+:root{
+  --budget-dd-bg:rgba(5,5,7,.82);
+  --budget-dd-bg-hover:rgba(13,12,11,.92);
+  --budget-dd-bg-focus:rgba(15,13,10,.95);
+  --budget-dd-border:rgba(255,255,255,.11);
+  --budget-dd-border-hover:rgba(224,184,94,.30);
+  --budget-dd-border-focus:rgba(224,184,94,.62);
+  --budget-dd-ring:rgba(224,184,94,.11);
+  --budget-dd-text:#eeeeef;
+  --budget-dd-gold:#e0b85e;
+  --budget-dd-menu-bg:#070708;
+  --budget-dd-menu-border:rgba(224,184,94,.36);
+  --budget-dd-hover:rgba(224,184,94,.09);
+  --budget-dd-selected:rgba(224,184,94,.16);
+}
+
+/* The data source is completely removed from layout. This rule loads after styles.css. */
+select.budget-dd-source,
+#operations .operation-panel select.budget-dd-source,
+.field select.budget-dd-source{
+  position:absolute!important;
+  width:1px!important;
+  height:1px!important;
+  min-width:1px!important;
+  min-height:1px!important;
+  max-width:1px!important;
+  max-height:1px!important;
+  margin:0!important;
+  padding:0!important;
+  opacity:0!important;
+  pointer-events:none!important;
+  clip-path:inset(50%)!important;
+  overflow:hidden!important;
+  border:0!important;
+  background:none!important;
+  background-image:none!important;
+  appearance:none!important;
+  -webkit-appearance:none!important;
+  z-index:-1!important;
+}
+
+.budget-dd-shell{
+  position:relative!important;
+  display:block!important;
+  width:100%!important;
+  min-width:0!important;
+  max-width:none!important;
+  box-sizing:border-box!important;
+  margin:0!important;
+  padding:0!important;
+  font:inherit!important;
+  color:inherit!important;
+}
+.budget-dd-shell--operation{
+  height:40px!important;
+  min-height:40px!important;
+  max-height:40px!important;
+}
+
+.budget-dd-trigger{
+  position:relative!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:10px!important;
+  box-sizing:border-box!important;
+  width:100%!important;
+  min-width:0!important;
+  max-width:none!important;
+  min-height:40px!important;
+  margin:0!important;
+  padding:0 12px!important;
+  border:1px solid var(--budget-dd-border)!important;
+  border-radius:10px!important;
+  background:var(--budget-dd-bg)!important;
+  color:var(--budget-dd-text)!important;
+  font:inherit!important;
+  font-size:12px!important;
+  font-weight:620!important;
+  line-height:1!important;
+  text-align:left!important;
+  cursor:pointer!important;
+  outline:none!important;
+  box-shadow:none!important;
+  -webkit-app-region:no-drag!important;
+  transition:border-color .14s ease,background .14s ease,box-shadow .14s ease,color .14s ease!important;
+}
+.budget-dd-shell--operation>.budget-dd-trigger{
+  height:40px!important;
+  min-height:40px!important;
+  max-height:40px!important;
+}
+.field>.budget-dd-shell>.budget-dd-trigger{min-height:42px!important}
+.budget-dd-trigger:hover{
+  border-color:var(--budget-dd-border-hover)!important;
+  background:var(--budget-dd-bg-hover)!important;
+}
+.budget-dd-trigger:focus-visible,
+.budget-dd-shell[data-open="1"]>.budget-dd-trigger{
+  border-color:var(--budget-dd-border-focus)!important;
+  background:var(--budget-dd-bg-focus)!important;
+  box-shadow:0 0 0 1px var(--budget-dd-ring),0 0 14px rgba(224,184,94,.045)!important;
+}
+.budget-dd-trigger:disabled{opacity:.52!important;cursor:not-allowed!important}
+.budget-dd-label{
+  display:block!important;
+  min-width:0!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+.budget-dd-chevron{
+  flex:0 0 auto!important;
+  width:8px!important;
+  height:8px!important;
+  border-right:1.5px solid var(--budget-dd-gold)!important;
+  border-bottom:1.5px solid var(--budget-dd-gold)!important;
+  transform:rotate(45deg) translateY(-2px)!important;
+  transform-origin:center!important;
+  opacity:.94!important;
+  transition:transform .14s ease,opacity .14s ease!important;
+}
+.budget-dd-shell[data-open="1"] .budget-dd-chevron{
+  transform:rotate(225deg) translate(-1px,-1px)!important;
+  opacity:1!important;
+}
+
+.budget-dd-menu{
+  position:fixed!important;
+  z-index:50000!important;
+  box-sizing:border-box!important;
+  min-width:120px!important;
+  max-width:calc(100vw - 20px)!important;
+  max-height:min(330px,calc(100vh - 24px))!important;
+  padding:6px!important;
+  overflow:auto!important;
+  border:1px solid var(--budget-dd-menu-border)!important;
+  border-radius:12px!important;
+  background:var(--budget-dd-menu-bg)!important;
+  color:var(--budget-dd-text)!important;
+  box-shadow:0 20px 52px rgba(0,0,0,.72),0 0 0 1px rgba(255,255,255,.025) inset,0 0 22px rgba(224,184,94,.04)!important;
+  scrollbar-width:none!important;
+  overscroll-behavior:contain!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+  -webkit-app-region:no-drag!important;
+}
+.budget-dd-menu::-webkit-scrollbar{display:none!important}
+
+.budget-dd-option{
+  width:100%!important;
+  min-width:0!important;
+  min-height:36px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:12px!important;
+  box-sizing:border-box!important;
+  padding:7px 10px!important;
+  border:1px solid transparent!important;
+  border-radius:8px!important;
+  background:transparent!important;
+  color:#d9d9dc!important;
+  font:inherit!important;
+  font-size:12px!important;
+  font-weight:560!important;
+  line-height:1.2!important;
+  text-align:left!important;
+  cursor:pointer!important;
+  outline:none!important;
+  white-space:nowrap!important;
+  -webkit-app-region:no-drag!important;
+  transition:background .12s ease,border-color .12s ease,color .12s ease!important;
+}
+.budget-dd-option-label{min-width:0!important;overflow:hidden!important;text-overflow:ellipsis!important}
+.budget-dd-option-check{flex:0 0 auto!important;color:var(--budget-dd-gold)!important;opacity:0!important;font-weight:800!important}
+.budget-dd-option:hover,
+.budget-dd-option:focus-visible,
+.budget-dd-option[data-active="1"]{
+  background:var(--budget-dd-hover)!important;
+  border-color:rgba(224,184,94,.11)!important;
+  color:#f3ead5!important;
+}
+.budget-dd-option[aria-selected="true"]{
+  background:var(--budget-dd-selected)!important;
+  border-color:rgba(224,184,94,.36)!important;
+  color:#f3d995!important;
+  box-shadow:0 0 0 1px rgba(224,184,94,.08) inset!important;
+}
+.budget-dd-option[aria-selected="true"] .budget-dd-option-check{opacity:1!important}
+.budget-dd-option:disabled{opacity:.42!important;cursor:not-allowed!important}
